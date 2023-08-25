@@ -17,11 +17,11 @@ public class Student {
     }
 
     public String getUserName() {
-        return userName;
+        return username;
     }
 
     public void setUserName(String userName) {
-        this.userName = userName;
+        this.username = userName;
     }
 
     public String getFirstName() {
@@ -57,7 +57,7 @@ public class Student {
     }
 
     @Column(name = "username", unique = true, nullable = false)
-    private String userName;
+    private String username;
 
     @Column(name = "firstname", length = 10)
     private String firstName;

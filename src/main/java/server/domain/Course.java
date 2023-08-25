@@ -12,7 +12,7 @@ public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "title",length = 10,nullable = false,unique = true)
+    @Column(name = "title",nullable = false,unique = true)
     private String title;
     @Column(name = "code",nullable = false)
     private String code;

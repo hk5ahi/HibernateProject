@@ -18,7 +18,7 @@
         <property name="hibernate.c3p0.idle_test_period">3000</property>
 
         <!-- Specify dialect -->
-        <property name="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
 
 
         <!-- Echo all executed SQL to stdout -->

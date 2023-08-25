@@ -4,10 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import server.domain.Student;
 import server.service.StudentService;
 
@@ -34,6 +31,13 @@ public class StudentController {
     public ResponseEntity<String> add(@RequestBody Student student) {
         studentService.addStudent(student);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @DeleteMapping("")
+    public void delete(@RequestParam String Username) {
+        studentService.deleteStudent(Username);
+
     }
 
 }
