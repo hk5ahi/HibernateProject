@@ -6,6 +6,7 @@ import server.dao.StudentDao;
 import server.domain.Enrollment;
 import server.domain.Student;
 import server.exception.NotFoundException;
+import server.exception.StudentAlreadyExistsException;
 import server.service.StudentService;
 
 import java.util.List;
@@ -29,8 +30,13 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void addStudent(Student student) {
-        studentDao.addStudent(student);
 
+        Optional<Student> existingStudent = studentDao.getStudentByUsername(student.getUsername());
+        if (existingStudent.isPresent()) {
+            throw new StudentAlreadyExistsException("Student with username " + student.getUsername() + " already exists.");
+        } else {
+            studentDao.addStudent(student);
+        }
     }
 
     @Override

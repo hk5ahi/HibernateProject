@@ -6,7 +6,10 @@ import server.dao.CourseDao;
 import server.dao.EnrollmentDao;
 import server.domain.Course;
 import server.domain.Enrollment;
+import server.domain.Student;
+import server.exception.CourseAlreadyExistsException;
 import server.exception.NotFoundException;
+import server.exception.StudentAlreadyExistsException;
 import server.service.CourseService;
 
 import java.util.List;
@@ -30,7 +33,13 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void addCourse(Course course) {
-        courseDao.addCourse(course);
+
+        Optional<Course> existingCourse = courseDao.getCourseByTitle(course.getTitle());
+        if (existingCourse.isPresent()) {
+            throw new CourseAlreadyExistsException("Course with" + course.getTitle() + " already exists.");
+        } else {
+            courseDao.addCourse(course);
+        }
     }
 
     @Override

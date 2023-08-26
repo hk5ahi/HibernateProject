@@ -4,6 +4,7 @@ import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 import server.dao.StudentDao;
 import server.domain.Student;
+import server.exception.StudentAlreadyExistsException;
 
 import java.util.List;
 import java.util.Optional;

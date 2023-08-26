@@ -1,31 +1,18 @@
 package server.domain;
+import lombok.Getter;
 
 import javax.persistence.*;
-
-
 
 @Entity
 @Table(name = "enrollments")
 public class Enrollment {
 
-    public Long getId() {
-        return id;
-    }
-
     public void setId(Long id) {
         this.id = id;
     }
 
-    public Student getStudent() {
-        return student;
-    }
-
     public void setStudent(Student student) {
         this.student = student;
-    }
-
-    public Course getCourse() {
-        return course;
     }
 
     public void setCourse(Course course) {
@@ -36,9 +23,13 @@ public class Enrollment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
+    @Getter
     @ManyToOne
     @JoinColumn(name = "student_id",unique = true)
     private Student student;
+
+    @Getter
     @ManyToOne
     @JoinColumn(name = "course_id",unique = true)
     private Course course;
@@ -47,4 +38,5 @@ public class Enrollment {
     public Enrollment() {
 
     }
+
 }

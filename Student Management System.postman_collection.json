@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "2da606f2-bf1c-4187-8cd3-c62e4bd9abdc",
+		"_postman_id": "2b9c1d27-ecb0-4895-b88f-61727e10f612",
 		"name": "Student Management System",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "29135019"
+		"_exporter_id": "28860833"
 	},
 	"item": [
 		{
@@ -101,8 +101,24 @@
 		{
 			"name": "Delete Student",
 			"request": {
-				"method": "GET",
-				"header": []
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/students?Username=m.hanan",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"students"
+					],
+					"query": [
+						{
+							"key": "Username",
+							"value": "m.hanan"
+						}
+					]
+				}
 			},
 			"response": []
 		},
@@ -112,7 +128,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/courses?title",
+					"raw": "localhost:8080/courses?title=Introduction to Programming",
 					"host": [
 						"localhost"
 					],
@@ -123,7 +139,7 @@
 					"query": [
 						{
 							"key": "title",
-							"value": null
+							"value": "Introduction to Programming"
 						}
 					]
 				}
@@ -134,10 +150,26 @@
 			"name": "Enroll in Course",
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"title\":\"Introduction to Programming\",\r\n    \"Username\":\"m.hanan\"\r\n}"
+					"raw": "{\r\n    \"title\":\"Introduction to Programming\",\r\n    \"username\":\"m.hanan\"\r\n}"
+				},
+				"url": {
+					"raw": "localhost:8080/enrollments",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"enrollments"
+					]
 				}
 			},
 			"response": []
@@ -148,7 +180,44 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "?Username=m.hanan&title=Introduction to Programming",
+					"raw": "localhost:8080/enrollments",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"enrollments"
+					],
+					"query": [
+						{
+							"key": "Username",
+							"value": "m.hanan",
+							"disabled": true
+						},
+						{
+							"key": "title",
+							"value": "Introduction to Programming",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Enrollment",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/enrollments?Username=m.hanan&title=Introduction to Programming",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"enrollments"
+					],
 					"query": [
 						{
 							"key": "Username",
@@ -160,14 +229,6 @@
 						}
 					]
 				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete Enrollment",
-			"request": {
-				"method": "GET",
-				"header": []
 			},
 			"response": []
 		}

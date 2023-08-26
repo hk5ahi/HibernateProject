@@ -11,5 +11,16 @@ public class CustomExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-
+    @ExceptionHandler(StudentAlreadyExistsException.class)
+    public ResponseEntity<String> handleStudentAlreadyExistsException(StudentAlreadyExistsException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+    @ExceptionHandler(CourseAlreadyExistsException.class)
+    public ResponseEntity<String> handleCourseAlreadyExistsException(CourseAlreadyExistsException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+    @ExceptionHandler(EnrollmentAlreadyExistsException.class)
+    public ResponseEntity<String> handleEnrollmentAlreadyExistsException(Exception ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
 }
