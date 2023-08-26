@@ -109,6 +109,7 @@ public class StudentDaoImpl implements StudentDao {
             e.printStackTrace(); // Handle the exception according to your application's needs
             return Optional.empty();
         } finally {
+            session.clear();
             session.close();
         }
     }

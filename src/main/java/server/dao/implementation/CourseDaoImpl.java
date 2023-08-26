@@ -60,12 +60,14 @@ public class CourseDaoImpl implements CourseDao {
             transaction = session.beginTransaction();
             session.save(course);
             transaction.commit();
+            session.clear();
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace(); // Handle the exception according to your application's needs
         } finally {
+
             session.close();
         }
 
@@ -88,6 +90,7 @@ public class CourseDaoImpl implements CourseDao {
             Session finalSession = session;
             courseToDelete.ifPresent(finalSession::delete);
             transaction.commit();
+
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
@@ -95,7 +98,9 @@ public class CourseDaoImpl implements CourseDao {
             e.printStackTrace(); // Handle the exception according to your application's needs
         } finally {
             if (session != null) {
+                session.clear();
                 session.close();
+
             }
         }
     }
@@ -118,6 +123,7 @@ public class CourseDaoImpl implements CourseDao {
             e.printStackTrace(); // Handle the exception according to your application's needs
             return Optional.empty(); // Return null or handle the error case appropriately
         } finally {
+            session.clear();
             session.close();
         }
     }

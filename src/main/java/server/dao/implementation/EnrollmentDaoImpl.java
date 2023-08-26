@@ -13,10 +13,7 @@ import server.domain.Enrollment;
 import server.domain.Student;
 import server.dto.EnrollmentDTO;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class EnrollmentDaoImpl implements EnrollmentDao {
@@ -33,63 +30,63 @@ public class EnrollmentDaoImpl implements EnrollmentDao {
 
     @Override
     public void addEnrollment(EnrollmentDTO enrollmentDTO) {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-
-        Enrollment enrollment = new Enrollment();
         Optional<Student> optionalStudent = studentDao.getStudentByUsername(enrollmentDTO.getUsername());
-        optionalStudent.ifPresent(enrollment::setStudent);
-
         Optional<Course> optionalCourse = courseDao.getCourseByTitle(enrollmentDTO.getTitle());
+        Session session = sessionFactory.openSession();
+        Transaction transaction=session.beginTransaction();
+        Enrollment enrollment = new Enrollment();
+        optionalStudent.ifPresent(enrollment::setStudent);
         optionalCourse.ifPresent(enrollment::setCourse);
         session.save(enrollment);
-
-        session.getTransaction().commit();
+        transaction.commit();
+        session.clear();
         session.close();
     }
 
     @Override
     public List<Enrollment> getEnrollmentsByCriteria(String username, String title) {
         Session session = sessionFactory.openSession();
+        List<Enrollment> enrollments = new ArrayList<>();
+        Optional<Course> optionalCourse = courseDao.getCourseByTitle(title);
+        Optional<Student> optionalStudent = studentDao.getStudentByUsername(username);
+        try {
+            if (title != null && username == null) {
 
-        if (title != null && username == null) {
-            // Fetch students enrolled in a specific course by title
-            Optional<Course> course = courseDao.getCourseByTitle(title);
-            if (course.isPresent()) {
-                Query query = session.createQuery(
-                        "SELECT e.student FROM Enrollment e WHERE e.course = :course");
-                query.setParameter("course", course.get());
-                return query.list();
+                if (optionalCourse.isPresent()) {
+                    Query query = session.createQuery(
+                            "SELECT e.student FROM Enrollment e WHERE e.course = :course");
+                    query.setParameter("course", optionalCourse.get());
+                    enrollments = query.list();
+                }
+            } else if (username != null && title == null) {
+
+                if (optionalStudent.isPresent()) {
+                    Query query = session.createQuery(
+                            "SELECT e.course FROM Enrollment e WHERE e.student = :student");
+                    query.setParameter("student", optionalStudent.get());
+                    enrollments = query.list();
+                }
+            } else if (title != null && username != null) {
+
+                if (optionalStudent.isPresent() && optionalCourse.isPresent()) {
+                    Query query = session.createQuery(
+                            "FROM Enrollment e WHERE e.course = :course AND e.student = :student");
+                    query.setParameter("course", optionalCourse.get());
+                    query.setParameter("student", optionalStudent.get());
+                    enrollments = query.list();
+                }
+            } else {
+                Query query = session.createQuery("FROM Enrollment");
+                enrollments = query.list();
             }
-        } else if (username != null && title == null) {
-            // Fetch courses in which a specific student is enrolled by username
-            Optional<Student> OptionalStudent = studentDao.getStudentByUsername(username);
-            if (OptionalStudent.isPresent()) {
-                Query query = session.createQuery(
-                        "SELECT e.course FROM Enrollment e WHERE e.student = :student");
-                query.setParameter("student", OptionalStudent.get());
-                return query.list();
-            }
-
-
-        } else if (title != null && username != null) {
-            // Fetch enrollment for a specific student and course by title and username
-            Optional<Student> OptionalStudent = studentDao.getStudentByUsername(username);
-            Optional<Course> OptionalCourse = courseDao.getCourseByTitle(title);
-            if (OptionalStudent.isPresent() && OptionalCourse.isPresent()) {
-                Query query = session.createQuery(
-                        "FROM Enrollment e WHERE e.course = :course AND e.student = :student");
-                query.setParameter("course", OptionalCourse.get());
-                query.setParameter("student", OptionalStudent.get());
-                return query.list();
-            }
-
-        } else {
-            // Fetch all enrollments if both title and username are null
-            Query query = session.createQuery("FROM Enrollment");
-            return query.list();
+        } catch (Exception e) {
+            e.printStackTrace(); // Handle the exception according to your application's needs
+        } finally {
+            session.clear();
+            session.close();
         }
-        return null;
+
+        return enrollments;
     }
 
     @Override
@@ -107,10 +104,12 @@ public class EnrollmentDaoImpl implements EnrollmentDao {
                 e.printStackTrace(); // Handle the exception according to your application's needs
                 return Collections.emptyList();
             } finally {
+                session.clear();
                 session.close();
             }
         }
-
+        session.clear();
+        session.close();
         return Collections.emptyList();
     }
 
@@ -129,10 +128,12 @@ public class EnrollmentDaoImpl implements EnrollmentDao {
                 e.printStackTrace(); // Handle the exception according to your application's needs
                 return Collections.emptyList();
             } finally {
+                session.clear();
                 session.close();
             }
         }
-
+        session.clear();
+        session.close();
         return Collections.emptyList();
     }
 
@@ -158,13 +159,13 @@ public class EnrollmentDaoImpl implements EnrollmentDao {
             transaction = session.beginTransaction();
             session.delete(enrollment);
             transaction.commit();
+            session.clear();
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace(); // Handle the exception according to your application's needs
         } finally {
-            session.clear();
             session.close();
         }
     }
@@ -184,6 +185,7 @@ public class EnrollmentDaoImpl implements EnrollmentDao {
             e.printStackTrace();
             return Optional.empty();
         } finally {
+            session.clear();
             session.close();
         }
     }
